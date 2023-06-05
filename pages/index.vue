@@ -34,6 +34,25 @@ export default {
       console.log("to jest event message")
     }
   }
+
+  // mounted() {
+  //   this.connection = new WebSocket("ws://localhost:8080/chat")
+  //
+  //   this.connection.onopen = function (event) {
+  //     console.log(event)
+  //     console.log("succes")
+  //   }
+  //
+  //   this.connection.onmessage = function (event) {
+  //     console.log(event)
+  //     this.messages.push(event.data)
+  //   }
+  // },
+  // methods: {
+  //   sendMessage(message) {
+  //     this.connection.send(message);
+  //   }
+  // }
 }
 </script>
 
