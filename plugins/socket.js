@@ -8,30 +8,30 @@ export default ({ app }) => {
 
   stompClient.webSocketFactory = () => socket
 
-  stompClient.onConnect = (frame) => {
-    console.log("połączono!")
-    stompClient.subscribe('/topic/messages', (message) => {
-      console.log('Otrzymano wiadomość!', message.body)
-    })
-
-    const messageToSend = {
-      value: 'wiadomość!',
-      user: 'Smyku'
-    }
-    const destination = '/app/chat' // Adres docelowy na serwerze
-    stompClient.publish({ destination, body: JSON.stringify(messageToSend) })
-
-  }
-  // Opcjonalnie, dodaj obsługę zdarzenia błędu
-  stompClient.onStompError = (frame) => {
-    console.error('Błąd STOMP:', frame)
-  }
-
-
-
-
-  // Połącz się z serwerem STOMP
-  stompClient.activate()
+  // stompClient.onConnect = (frame) => {
+  //   console.log("połączono!")
+  //   stompClient.subscribe('/topic/messages', (message) => {
+  //     console.log('Otrzymano wiadomość!', message.body)
+  //   })
+  //
+  //   const messageToSend = {
+  //     value: 'wiadomość!',
+  //     user: 'Smyku'
+  //   }
+  //   const destination = '/app/chat' // Adres docelowy na serwerze
+  //   stompClient.publish({ destination, body: JSON.stringify(messageToSend) })
+  //
+  // }
+  // // Opcjonalnie, dodaj obsługę zdarzenia błędu
+  // stompClient.onStompError = (frame) => {
+  //   console.error('Błąd STOMP:', frame)
+  // }
+  //
+  //
+  //
+  //
+  // // Połącz się z serwerem STOMP
+  // stompClient.activate()
 
 
   // // Obsługa zdarzenia połączenia
@@ -72,5 +72,5 @@ export default ({ app }) => {
   // })
 
   // Dodaj instancję WebSocket do obiektu Vue
-  Vue.prototype.stompClient = stompClient
+  Vue.prototype.$stompClient = stompClient
 }

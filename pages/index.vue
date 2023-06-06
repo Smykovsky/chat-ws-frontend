@@ -5,31 +5,51 @@
         {{ message }}
       </li>
     </ul>
-    <input v-model="messageToSend" type="text" placeholder="Wprowadź wiadomość" />
+    <input v-model="credentials.value" type="text" placeholder="Wprowadź wiadomość" />
+    <input v-model="credentials.user" type="text" placeholder="Wprowadź wiadomość" />
     <button @click="sendMessage">Wyślij</button>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
   data() {
     return {
       messages: [],
-      messageToSend: ''
+      credentials: {
+        value: '',
+        user: ''
+      }
     }
   },
-  methods: {
-    mounted() {
-      this.$socket.onopen('message', () => {
-        console.log("wysłano")
+  mounted() {
+    this.$stompClient.onConnect = (frame) => {
+      console.log("połączono!")
+      this.$stompClient.subscribe('/topic/messages', (message) => {
+        console.log(JSON.parse(message.body).value, JSON.parse(message.body).user)
       })
-    },
+
+        // const messageToSend = {
+        //   value: 'wiadomość!',
+        //   user: 'Smyku'
+        // }
+        // const destination = '/app/chat' // Adres docelowy na serwerze
+        // this.$stompClient.publish({ destination, body: JSON.stringify(messageToSend) })
+        // this.messages.push(messageToSend.value)
+    }
+
+    this.$stompClient.onStompError = (frame) => {
+      console.log("Błąd podczas łączenia!")
+    }
+
+    this.$stompClient.activate()
+  },
+  methods: {
     sendMessage() {
-      this.$socket.emit('message', this.messageToSend)
-      this.messageToSend = '';
-      console.log("to jest event message")
+      this.$stompClient.publish({destination: "/app/chat", body: JSON.stringify(this.credentials)})
+      this.messages.push(this.credentials.value)
+      this.credentials.value = ''
+      this.credentials.user = ''
     }
   }
 
