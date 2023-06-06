@@ -14,9 +14,12 @@ export default ({ app }) => {
       console.log('Otrzymano wiadomość!', message.body)
     })
 
-    const messageToSend = 'To jest wiadomość do serwera'
-    const destination = '/topic/messages' // Adres docelowy na serwerze
-    stompClient.publish({ destination, body: messageToSend })
+    const messageToSend = {
+      value: 'wiadomość!',
+      user: 'Smyku'
+    }
+    const destination = '/app/chat' // Adres docelowy na serwerze
+    stompClient.publish({ destination, body: JSON.stringify(messageToSend) })
 
   }
   // Opcjonalnie, dodaj obsługę zdarzenia błędu
@@ -69,5 +72,5 @@ export default ({ app }) => {
   // })
 
   // Dodaj instancję WebSocket do obiektu Vue
-  Vue.prototype.$socket = socket
+  Vue.prototype.stompClient = stompClient
 }
