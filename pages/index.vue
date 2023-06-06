@@ -20,16 +20,14 @@ export default {
       messageToSend: ''
     }
   },
-
-  mounted() {
-    this.$socket.$on('message', this.onMessage);
-  },
   methods: {
-    onMessage(message) {
-      this.messages.push(message)
+    mounted() {
+      this.$socket.onopen('message', () => {
+        console.log("wysłano")
+      })
     },
     sendMessage() {
-      this.$socket.$emit('message', this.messageToSend)
+      this.$socket.emit('message', this.messageToSend)
       this.messageToSend = '';
       console.log("to jest event message")
     }

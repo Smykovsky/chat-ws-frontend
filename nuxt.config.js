@@ -28,6 +28,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~/plugins/socket.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -41,21 +42,13 @@ export default {
   modules: [
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
-    '@deepsource/nuxt-websocket',
   ],
   /*
   ** Build configuration
   */
   build: {
-    /*
-    ** You can extend webpack config here
-    */
-    extend (config, ctx) {
-    }
+   transpile: ['stompjs']
   },
 
-  websocket: {
-    url: 'ws://localhost:8080/chat'
-  }
 
 }
