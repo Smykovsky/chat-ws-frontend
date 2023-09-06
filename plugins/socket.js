@@ -8,6 +8,18 @@ export default ({ app }) => {
 
   stompClient.webSocketFactory = () => socket
 
+  stompClient.connect = () => {
+    stompClient.activate()
+  }
+
+  stompClient.onConn = (onReceived, onPrivateReceived, username) => {
+    stompClient.onConnect = () => {
+      stompClient.subscribe('/chatroom/messages', onReceived);
+      stompClient.subscribe('/user/'+username+'/private', onPrivateReceived);
+      console.log('poloczono')
+    }
+  }
+
   // stompClient.onConnect = (frame) => {
   //   console.log("połączono!")
   //   stompClient.subscribe('/topic/messages', (message) => {

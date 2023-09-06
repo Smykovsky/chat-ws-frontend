@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="register">
+      <input id="user-name" v-model="credentials.username">
+      <button type="button" @click="registerUser">Połącz</button>
+    </div>
+
     <input v-model="credentials.value" type="text" placeholder="Wprowadź wiadomość" />
     <button @click="sendMessage">Wyślij</button>
     <ul>
@@ -16,16 +21,20 @@ export default {
     return {
       messages: [],
       credentials: {
+        username: '',
+        senderName: '',
+        receiverName: '',
         value: '',
-      }
+      },
+      privateChats: new Map(),
+      publicChat: [],
     }
   },
   mounted() {
-    this.$stompClient.onConnect = (frame) => {
-      console.log("połączono!")
-      this.$stompClient.subscribe('/topic/messages', this.onMessageReceived)
-    }
-    this.$stompClient.activate()
+    this.$stompClient.onConn(this.onMessageReceived, this.onPrivateMessageReceived, this.credentials.username);
+
+    this.$stompClient.connect()
+
   },
   methods: {
     sendMessage() {
@@ -33,10 +42,37 @@ export default {
       this.credentials.value = ''
     },
     onMessageReceived(stompMessage) {
-
       const message = JSON.parse(stompMessage.body).value;
       this.messages.push(message);
+      console.log(message)
     },
+    connect() {
+      console.log(this.$stompClient)
+    },
+    registerUser() {
+      this.connect();
+    },
+    userJoin() {
+      var chatMessage = {
+        senderName: this.credentials.username
+      };
+      this.$stompClient.send("/app/chat", {}, JSON.stringify(chatMessage))
+
+    },
+    onPrivateMessageReceived(payload) {
+        var payloadData = JSON.parse(payload.body);
+        if (this.privateChats.get(payloadData.senderName)){
+          this.privateChats.get(payloadData.senderName).push(payloadData);
+          this.privateChats.set(new Map(this.privateChats));
+        } else {
+          let list = [];
+          list.push(payloadData);
+          this.privateChats.set(payloadData.senderName, list);
+          this.privateChats.set(new Map(this.privateChats));
+        }
+    }
+
+
   }
 }
 </script>
