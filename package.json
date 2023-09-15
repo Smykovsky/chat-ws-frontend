@@ -15,9 +15,11 @@
     "@stomp/stompjs": "^7.0.0",
     "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0",
+    "net": "^1.0.2",
     "nuxt": "^2.0.0",
     "socket.io-client": "^4.6.2",
     "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "vue": "^2.6.11",
     "webstomp-client": "^1.2.6",
     "ws": "^8.14.1"
