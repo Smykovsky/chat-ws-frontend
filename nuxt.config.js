@@ -25,7 +25,7 @@ export default {
   css: [
   ],
   /*
-  ** Plugins to load before mounting the App
+  ** Plugins to load before mounting the Appy
   */
   plugins: [
     { src: '~/plugins/socket.js', ssr: false }

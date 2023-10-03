@@ -109,7 +109,7 @@ export default {
       const payloadData = JSON.parse(payload.body);
       switch (payloadData.status) {
         case 'JOIN':
-          if (!this.privateChats[payloadData.senderName]) {
+          if (this.privateChats[payloadData.senderName]) {
             this.$set(this.privateChats, payloadData.senderName, []);
             console.log("Witaj: " + payloadData.senderName)
           }
@@ -131,8 +131,12 @@ export default {
       } else {
         this.$set(this.privateChats, payloadData.senderName, [payloadData]);
       }
-      EventBus.$emit('updatePrivateChats', this.privateChats);
-      EventBus.$emit('updateOnlineUsers', this.onlineUsers)
+
+      if (!this.onlineUsers.includes(payloadData.senderName)) {
+        this.onlineUsers.push(payloadData.senderName);
+        EventBus.$emit('updateOnlineUsers', this.onlineUsers);
+        console.log("Dodaje nowego użytkownika: " + payloadData.senderName)
+      }
       console.log("otrzymano private message!")
     },
     onError(err) {
@@ -186,6 +190,8 @@ export default {
       this.privateChats = privateChats;
       console.log("Aktualizuje private chats!")
     });
+
+
     EventBus.$on('updatePublicChats', (publicChats) => {
       this.publicChats = publicChats;
       console.log("Aktualizuje public chats!")
